@@ -23,6 +23,7 @@
                 Jelajahi persebaran data gender di lingkungan universitas
                 berdasarkan fakultas, unit, dan kategori turunannya.
             </p>
+            <a class="home-link" href="{{ url('/') }}">← Kembali ke Beranda</a>
         </div>
 
         <div class="intro-mark">
@@ -326,11 +327,6 @@
 
     @endif
 
-    {{-- FOOTER --}}
-    <footer class="page-footer">
-        <span>PSGA · UIN Syarif Hidayatullah Jakarta</span>
-        <span>Visualisasi Data Gender</span>
-    </footer>
 
 </main>
 

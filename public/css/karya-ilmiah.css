@@ -27,6 +27,8 @@ button, input { font: inherit; }
 .eyebrow { margin: 0 0 9px; color: var(--psga-primary); font-size: .76rem; font-weight: 700; letter-spacing: .12em; }
 .page-intro h1 { margin: 0; color: var(--psga-primary); font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -.045em; line-height: 1.15; }
 .intro-description { max-width: 650px; margin: 14px 0 0; color: var(--psga-muted); font-size: 1rem; }
+.home-link { display: inline-flex; align-items: center; margin-top: 18px; padding: 10px 15px; border: 1px solid var(--psga-border); border-radius: 10px; background: var(--psga-white); color: var(--psga-primary); font-size: .9rem; font-weight: 700; text-decoration: none; transition: background .2s, color .2s, transform .2s; }
+.home-link:hover { background: var(--psga-primary); color: var(--psga-white); transform: translateY(-1px); }
 .intro-mark {
     width: 100px;
     height: 100px;

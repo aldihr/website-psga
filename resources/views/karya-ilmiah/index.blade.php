@@ -12,6 +12,7 @@
             <p class="eyebrow">PUSAT STUDI GENDER DAN ANAK</p>
             <h1>Karya Ilmiah</h1>
             <p class="intro-description">Jelajahi publikasi, penelitian, dan pemikiran akademik seputar gender, anak, dan pemberdayaan masyarakat.</p>
+            <a class="home-link" href="{{ url('/') }}">← Kembali ke Beranda</a>
         </div>
         <div class="intro-mark">
             <img src="{{ asset('images/PSGA.jpg') }}" alt="PSGA">
@@ -94,7 +95,6 @@
             </div>
         @endif
     </section>
-    <footer class="page-footer"><span>PSGA · UIN Syarif Hidayatullah Jakarta</span><span>Pusat Studi Gender dan Anak</span></footer>
 </main>
 </body>
 </html>

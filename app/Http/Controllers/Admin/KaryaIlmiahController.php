@@ -30,10 +30,9 @@ class KaryaIlmiahController extends Controller
             ->orderByDesc('tahun_publikasi')
             ->pluck('tahun_publikasi');
 
-        // Urutkan berdasarkan ID dari terkecil ke terbesar.
-        // Data baru akan muncul setelah data lama.
         $karyaIlmiah = $query
-            ->orderBy('id', 'asc')
+            ->orderByDesc('tahun_publikasi')
+            ->orderByDesc('id')
             ->paginate(10)
             ->withQueryString();
 
@@ -45,25 +44,50 @@ class KaryaIlmiahController extends Controller
 
     public function exportExcel(Request $request, KaryaIlmiahExporter $exporter)
     {
-        $records = $this->filteredQuery($request)->orderBy('id')->get();
+        $records = $this->filteredQuery($request)
+            ->orderByDesc('tahun_publikasi')
+            ->orderByDesc('id')
+            ->get();
         $path = $exporter->excel($records);
 
         return response()->download(
             $path,
-            'karya-ilmiah-' . now()->format('Ymd-His') . '.xlsx',
+            $this->namaFileEkspor($request, 'xlsx'),
             ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
         )->deleteFileAfterSend(true);
     }
 
     public function exportPdf(Request $request, KaryaIlmiahExporter $exporter)
     {
-        $records = $this->filteredQuery($request)->orderBy('id')->get();
+        $records = $this->filteredQuery($request)
+            ->orderByDesc('tahun_publikasi')
+            ->orderByDesc('id')
+            ->get();
         $pdf = $exporter->pdf($records);
 
         return response($pdf, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="karya-ilmiah-' . now()->format('Ymd-His') . '.pdf"',
+            'Content-Disposition' => 'attachment; filename="' . $this->namaFileEkspor($request, 'pdf') . '"',
         ]);
+    }
+
+    private function namaFileEkspor(Request $request, string $ekstensi): string
+    {
+        $tahun = $request->input('tahun_publikasi');
+        $nama = 'Karya Ilmiah PSGA';
+
+        if ($tahun !== null && $tahun !== '') {
+            $nama .= '-' . $tahun;
+        }
+
+        $jenisPublikasi = trim((string) $request->input('jenis_publikasi', ''));
+        if ($jenisPublikasi !== '') {
+            $jenisUntukNamaFile = preg_replace('/[^\pL\pN ]/u', '', $jenisPublikasi);
+            $jenisUntukNamaFile = preg_replace('/\s+/u', ' ', trim($jenisUntukNamaFile));
+            $nama .= '-' . $jenisUntukNamaFile;
+        }
+
+        return $nama . ' (' . now('Asia/Jakarta')->format('d-m-Y') . ').' . $ekstensi;
     }
 
     private function filteredQuery(Request $request): Builder
@@ -128,11 +152,25 @@ class KaryaIlmiahController extends Controller
         $data = $request->validate([
             'nama_karya' => 'required|string|max:255',
             'nama_penulis' => 'required|string|max:255',
-            'jenis_publikasi' => 'required|string|max:100',
+            'jenis_publikasi_pilihan' => 'required|string|max:100',
+            'jenis_publikasi_lainnya' => 'nullable|string|max:100',
             'tahun_publikasi' => 'required|integer|min:1901|max:2155',
             'deskripsi' => 'nullable|string',
             'link' => 'nullable|url|max:2048',
         ]);
+        $data['jenis_publikasi'] = $data['jenis_publikasi_pilihan'];
+        if ($data['jenis_publikasi_pilihan'] === 'Lainnya') {
+            $jenisLainnya = $this->kapitalisasiAwalSetiapKata($data['jenis_publikasi_lainnya'] ?? '');
+            $data['jenis_publikasi'] = $jenisLainnya !== '' ? $jenisLainnya : 'Lainnya';
+        }
+        unset($data['jenis_publikasi_pilihan'], $data['jenis_publikasi_lainnya']);
+
+        $duplikat = $this->cariDuplikat($data['nama_karya'], $data['jenis_publikasi']);
+        if ($duplikat && $request->input('konfirmasi_duplikat') !== '1') {
+            return back()
+                ->withInput()
+                ->with('karyaIlmiahDuplikat', $this->ringkasanDuplikat($duplikat));
+        }
 
         KaryaIlmiah::create($data);
 
@@ -162,17 +200,75 @@ class KaryaIlmiahController extends Controller
         $data = $request->validate([
             'nama_karya' => 'required|string|max:255',
             'nama_penulis' => 'required|string|max:255',
-            'jenis_publikasi' => 'required|string|max:100',
+            'jenis_publikasi_pilihan' => 'required|string|max:100',
+            'jenis_publikasi_lainnya' => 'nullable|string|max:100',
             'tahun_publikasi' => 'required|integer|min:1901|max:2155',
             'deskripsi' => 'nullable|string',
             'link' => 'nullable|url|max:2048',
         ]);
+        $data['jenis_publikasi'] = $data['jenis_publikasi_pilihan'];
+        if ($data['jenis_publikasi_pilihan'] === 'Lainnya') {
+            $jenisLainnya = $this->kapitalisasiAwalSetiapKata($data['jenis_publikasi_lainnya'] ?? '');
+            $data['jenis_publikasi'] = $jenisLainnya !== '' ? $jenisLainnya : 'Lainnya';
+        }
+        unset($data['jenis_publikasi_pilihan'], $data['jenis_publikasi_lainnya']);
+
+        $duplikat = $this->cariDuplikat(
+            $data['nama_karya'],
+            $data['jenis_publikasi'],
+            $karyaIlmiah->id
+        );
+        if ($duplikat && $request->input('konfirmasi_duplikat') !== '1') {
+            return back()
+                ->withInput()
+                ->with('karyaIlmiahDuplikat', $this->ringkasanDuplikat($duplikat));
+        }
 
         $karyaIlmiah->update($data);
 
         return redirect()
             ->route('admin.karya-ilmiah.index')
             ->with('success', 'Karya ilmiah berhasil diperbarui.');
+    }
+
+    private function kapitalisasiAwalSetiapKata(string $teks): string
+    {
+        $teks = trim($teks);
+
+        return preg_replace_callback(
+            '/(^|[\s\-\/])(\p{L})/u',
+            static fn (array $cocok) => $cocok[1] . mb_strtoupper($cocok[2], 'UTF-8'),
+            $teks
+        );
+    }
+
+    private function cariDuplikat(string $judul, string $jenisPublikasi, ?int $kecualiId = null): ?KaryaIlmiah
+    {
+        $query = KaryaIlmiah::query()
+            ->whereRaw('LOWER(nama_karya) = ?', [mb_strtolower(trim($judul), 'UTF-8')])
+            ->whereRaw('LOWER(jenis_publikasi) = ?', [mb_strtolower(trim($jenisPublikasi), 'UTF-8')]);
+
+        if ($kecualiId !== null) {
+            $query->where('id', '<>', $kecualiId);
+        }
+
+        return $query->first();
+    }
+
+    private function ringkasanDuplikat(KaryaIlmiah $karyaIlmiah): array
+    {
+        $waktuDibuat = $karyaIlmiah->created_at;
+
+        return [
+            'id' => $karyaIlmiah->id,
+            'nama_karya' => $karyaIlmiah->nama_karya,
+            'nama_penulis' => $karyaIlmiah->nama_penulis,
+            'jenis_publikasi' => $karyaIlmiah->jenis_publikasi,
+            'tahun_publikasi' => $karyaIlmiah->tahun_publikasi,
+            'deskripsi' => $karyaIlmiah->deskripsi,
+            'created_at_local' => $waktuDibuat?->copy()->setTimezone('Asia/Jakarta')->format('d/m/Y H:i'),
+            'created_at_utc' => $waktuDibuat?->copy()->setTimezone('UTC')->format('d/m/Y H:i'),
+        ];
     }
 
     /**

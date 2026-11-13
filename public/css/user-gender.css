@@ -122,6 +122,27 @@ button {
     line-height: 1.8;
 }
 
+.home-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 16px;
+    padding: 10px 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--white);
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.home-link:hover {
+    background: var(--primary);
+    color: var(--white);
+    transform: translateY(-1px);
+}
+
 /* Logo PSGA: bingkai tetap bulat */
 
 .intro-mark {

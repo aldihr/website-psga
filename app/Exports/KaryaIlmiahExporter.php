@@ -34,11 +34,11 @@ class KaryaIlmiahExporter
     {
         $columns = [
             ['No', 35],
-            ['Judul Karya', 235],
-            ['Penulis', 145],
+            ['Judul Karya', 230],
+            ['Penulis', 135],
             ['Jenis Publikasi', 145],
             ['Tahun', 50],
-            ['Tanggal Ditambahkan', 150],
+            ['Tanggal Ditambahkan (WIB)', 191],
         ];
         $rows = $records->values()->map(fn ($record, $index) => [
             $index + 1,
@@ -46,7 +46,7 @@ class KaryaIlmiahExporter
             $record->nama_penulis,
             $record->jenis_publikasi,
             $record->tahun_publikasi ?? '-',
-            $record->created_at?->format('d/m/Y') ?? '-',
+            $record->created_at?->copy()->setTimezone('Asia/Jakarta')->format('d/m/Y H:i') ?? '-',
         ])->all();
 
         $preparedRows = [];
@@ -82,21 +82,23 @@ class KaryaIlmiahExporter
 
         $pageContents = [];
         $watermark = $this->pdfLogoWatermark();
-        $exportedAtUtc = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $exportedAtJakarta = $exportedAtUtc->setTimezone(new \DateTimeZone('Asia/Jakarta'));
-        $exportTimestamp = 'Waktu ekspor: ' . $exportedAtUtc->format('d/m/Y H:i') . ' UTC | '
-            . $exportedAtJakarta->format('d/m/Y H:i') . ' WIB';
+        $exportedAtJakarta = new \DateTimeImmutable('now', new \DateTimeZone('Asia/Jakarta'));
+        $exportTimestamp = 'Waktu ekspor: ' . $exportedAtJakarta->format('d/m/Y H:i') . ' WIB';
 
         foreach ($chunks as $pageIndex => $pageRows) {
             $headerY = 481;
+            $rowBands = '';
             $rowSeparators = '';
             $rowTop = $headerY - 5;
             foreach ($pageRows as $row) {
                 $rowTop -= $row['height'];
+                if ($row['index'] % 2 === 1) {
+                    $rowBands .= "0.976 0.957 0.973 rg 28 " . $rowTop . " 786 " . $row['height'] . " re f\n";
+                }
                 $rowSeparators .= "0.914 0.863 0.902 RG 0.5 w 28 " . $rowTop . " m 814 " . $rowTop . " l S\n";
             }
 
-            $content = $watermark . $rowSeparators;
+            $content = $rowBands . $watermark . $rowSeparators;
             $content .= "0.580 0.086 0.459 rg 28 535 786 32 re f\n";
             $content .= $this->pdfText(38, 547, 'PSGA - Karya Ilmiah', 15, true, '1 1 1');
             $content .= $this->pdfText(28, 521, $exportTimestamp, 8);
@@ -107,6 +109,15 @@ class KaryaIlmiahExporter
             foreach ($columns as [$label, $width]) {
                 $content .= $this->pdfText($x + 4, $headerY + 3, $label, 9, true, '1 1 1');
                 $x += $width;
+            }
+
+            $content .= "0.85 0.77 0.84 RG 0.4 w\n";
+            $x = 28;
+            $gridTop = $headerY + 19;
+            $content .= $x . ' ' . $rowTop . ' m ' . $x . ' ' . $gridTop . " l S\n";
+            foreach ($columns as [, $width]) {
+                $x += $width;
+                $content .= $x . ' ' . $rowTop . ' m ' . $x . ' ' . $gridTop . " l S\n";
             }
 
             $rowTop = $headerY - 5;
@@ -136,7 +147,7 @@ class KaryaIlmiahExporter
     {
         $rows = [[
             'No', 'Judul Karya', 'Penulis', 'Jenis Publikasi', 'Tahun Publikasi',
-            'Deskripsi', 'Link', 'Tanggal Ditambahkan',
+            'Deskripsi', 'Link', 'Tanggal Ditambahkan (WIB)',
         ]];
 
         foreach ($records->values() as $index => $record) {
@@ -148,7 +159,7 @@ class KaryaIlmiahExporter
                 $record->tahun_publikasi ?? '',
                 $record->deskripsi ?? '',
                 $record->link ?? '',
-                $record->created_at?->format('Y-m-d H:i:s') ?? '',
+                $record->created_at?->copy()->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s') ?? '',
             ];
         }
 
@@ -167,10 +178,14 @@ class KaryaIlmiahExporter
 
         foreach ($rows as $rowIndex => $row) {
             $excelRow = $rowIndex + 1;
-            $xml .= '<row r="' . $excelRow . '"' . ($rowIndex === 0 ? ' ht="36" customHeight="1"' : '') . '>';
+            $xml .= '<row r="' . $excelRow . '"' . ($rowIndex === 0 ? ' ht="36" customHeight="1"' : ' ht="28" customHeight="1"') . '>';
             foreach ($row as $columnIndex => $value) {
                 $cell = $this->columnName($columnIndex + 1) . $excelRow;
-                $style = $rowIndex === 0 ? 1 : (in_array($columnIndex, [0, 4, 7], true) ? 3 : 2);
+                $isCentered = in_array($columnIndex, [0, 4, 7], true);
+                $isAlternate = $rowIndex > 0 && $rowIndex % 2 === 0;
+                $style = $rowIndex === 0
+                    ? 1
+                    : ($isAlternate ? ($isCentered ? 5 : 4) : ($isCentered ? 3 : 2));
                 if ($rowIndex > 0 && in_array($columnIndex, [0, 4], true) && is_numeric($value)) {
                     $xml .= '<c r="' . $cell . '" s="' . $style . '" t="n"><v>' . $value . '</v></c>';
                     continue;
@@ -182,7 +197,7 @@ class KaryaIlmiahExporter
             $xml .= '</row>';
         }
 
-        return $xml . '</sheetData><autoFilter ref="A1:H' . $lastRow . '"/></worksheet>';
+        return $xml . '</sheetData></worksheet>';
     }
 
     private function stylesXml(): string
@@ -191,16 +206,19 @@ class KaryaIlmiahExporter
             . '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
             . '<fonts count="2"><font><color rgb="FF382638"/><sz val="11"/><name val="Calibri"/></font>'
             . '<font><b/><color rgb="FFFFFFFF"/><sz val="11"/><name val="Calibri"/></font></fonts>'
-            . '<fills count="3"><fill><patternFill patternType="none"/></fill>'
+            . '<fills count="4"><fill><patternFill patternType="none"/></fill>'
             . '<fill><patternFill patternType="gray125"/></fill>'
-            . '<fill><patternFill patternType="solid"><fgColor rgb="FF941675"/><bgColor indexed="64"/></patternFill></fill></fills>'
+            . '<fill><patternFill patternType="solid"><fgColor rgb="FF941675"/><bgColor indexed="64"/></patternFill></fill>'
+            . '<fill><patternFill patternType="solid"><fgColor rgb="FFFAF4F9"/><bgColor indexed="64"/></patternFill></fill></fills>'
             . '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border>'
             . '<border><left/><right/><top/><bottom style="thin"><color rgb="FFE9DCE6"/></bottom><diagonal/></border></borders>'
             . '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
-            . '<cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
+            . '<cellXfs count="6"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
             . '<xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'
             . '<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf>'
-            . '<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf></cellXfs>'
+            . '<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'
+            . '<xf numFmtId="0" fontId="0" fillId="3" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf>'
+            . '<xf numFmtId="0" fontId="0" fillId="3" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf></cellXfs>'
             . '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'
             . '</styleSheet>';
     }

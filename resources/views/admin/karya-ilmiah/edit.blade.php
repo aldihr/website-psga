@@ -10,8 +10,16 @@
 <main class="admin-main">
     <a class="back-link" href="{{ route('admin.karya-ilmiah.index') }}">← Kembali ke daftar</a>
     <section class="form-panel">
-        <h1>Edit Karya Ilmiah</h1>
-        <p>Perbarui informasi publikasi yang dipilih.</p>
+        <div class="form-heading">
+            <div>
+                <h1>Edit Karya Ilmiah</h1>
+                <p>Perbarui informasi publikasi yang dipilih.</p>
+            </div>
+            <div class="database-number" aria-label="Nomor database {{ $karyaIlmiah->id }}">
+                <span>No. Database</span>
+                <strong>#{{ $karyaIlmiah->id }}</strong>
+            </div>
+        </div>
 
         <form method="POST"
               action="{{ route('admin.karya-ilmiah.update', $karyaIlmiah) }}">

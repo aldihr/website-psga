@@ -730,10 +730,37 @@ td a:not(.btn-edit):hover {
     line-height: 1.4;
 }
 
-.form-panel > p {
+.form-panel > p,
+.form-heading p {
     margin: 8px 0 0;
     color: var(--muted);
     font-size: 13px;
+}
+
+.form-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.database-number {
+    display: flex;
+    min-width: 132px;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 13px;
+    color: var(--muted);
+    background: #faf4f9;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    text-align: right;
+    font-size: 11px;
+}
+
+.database-number strong {
+    color: var(--primary);
+    font-size: 14px;
 }
 
 .form-panel form {
@@ -777,6 +804,148 @@ td a:not(.btn-edit):hover {
 .form-grid select:focus {
     border-color: var(--primary-light);
     box-shadow: 0 0 0 3px rgba(148, 22, 117, 0.08);
+}
+
+.year-picker {
+    position: relative;
+}
+
+.year-picker-trigger {
+    width: 100%;
+    padding: 12px 13px;
+    color: var(--text);
+    text-align: left;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.year-picker-trigger:focus-visible,
+.year-picker-option:focus-visible {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 2px;
+}
+
+#jenis_publikasi_lainnya:not([hidden]) {
+    margin-top: 8px;
+}
+
+.year-picker-options {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 4px);
+    right: 0;
+    left: 0;
+    display: flex;
+    max-height: 220px;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 4px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 8px 22px rgba(20, 25, 35, 0.14);
+}
+
+.year-picker-options[hidden] {
+    display: none;
+}
+
+.year-picker-option {
+    flex: 0 0 auto;
+    padding: 8px 10px;
+    color: var(--text);
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.year-picker-option:hover,
+.year-picker-option[aria-selected="true"] {
+    color: var(--primary);
+    background: rgba(148, 22, 117, 0.08);
+}
+
+.duplicate-modal {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(31, 19, 31, 0.52);
+}
+
+.duplicate-modal[hidden] {
+    display: none;
+}
+
+.duplicate-modal-card {
+    width: min(100%, 560px);
+    padding: 24px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 18px 50px rgba(20, 15, 25, 0.24);
+}
+
+.duplicate-modal-card h2 {
+    margin: 0;
+    color: var(--text);
+    font-size: 20px;
+}
+
+.duplicate-modal-card > p {
+    margin: 8px 0 18px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.duplicate-summary {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+}
+
+.duplicate-summary > div {
+    display: grid;
+    grid-template-columns: minmax(110px, 0.35fr) 1fr;
+    gap: 12px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+}
+
+.duplicate-summary > div:last-child {
+    border-bottom: 0;
+}
+
+.duplicate-summary dt {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.duplicate-summary dd {
+    margin: 0;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+.duplicate-modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 .form-grid textarea {
@@ -1012,6 +1181,17 @@ select:focus-visible {
 
     .form-panel h1 {
         font-size: 22px;
+    }
+
+    .form-heading {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .database-number {
+        min-width: 108px;
+        padding: 8px 10px;
+        font-size: 10px;
     }
 
     .form-actions {

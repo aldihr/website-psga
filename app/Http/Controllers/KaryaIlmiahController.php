@@ -46,6 +46,7 @@ class KaryaIlmiahController extends Controller
             ->pluck('tahun_publikasi');
 
         $karyaIlmiah = $query
+            ->orderByDesc('tahun_publikasi')
             ->orderByDesc('id')
             ->paginate(10)
             ->withQueryString();
