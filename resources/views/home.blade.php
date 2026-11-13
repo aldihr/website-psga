@@ -844,6 +844,14 @@
                         <a href="#">Agenda</a>
                     </li>
 
+                    <li>
+                        <a href="{{ route('karya-ilmiah.index') }}">Karya Ilmiah</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('gender.index') }}">Gender</a>
+                    </li>
+
                 </ul>
 
             </li>
