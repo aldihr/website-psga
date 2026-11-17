@@ -1,0 +1,1011 @@
+
+/* =====================================================
+   PSGA WEB - VISUALISASI GENDER
+   File: public/css/user-gender.css
+   ===================================================== */
+
+:root {
+    --primary: #941675;
+    --primary-dark: #74105B;
+    --primary-light: #B52B91;
+
+    --pink: #F8D2E8;
+    --pink-soft: #FCEAF4;
+    --background: #FAF6F9;
+    --white: #FFFFFF;
+
+    --text: #382638;
+    --muted: #796B78;
+    --border: #E9DCE6;
+
+    --male: #3478D4;
+    --female: #E56B9A;
+
+    --shadow: 0 8px 26px rgb(95 28 78 / 7%);
+    --shadow-hover: 0 12px 32px rgb(95 28 78 / 12%);
+
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 22px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+button {
+    cursor: pointer;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 1240px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 32px 24px 24px;
+}
+
+/* ================= HEADER ================= */
+
+.page-intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+
+    margin-bottom: 28px;
+    padding: 28px 30px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+}
+
+.intro-copy {
+    flex: 1;
+    min-width: 0;
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.page-intro h1 {
+    margin: 0 0 10px;
+    color: var(--primary);
+    font-size: clamp(26px, 3vw, 36px);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -.6px;
+}
+
+.intro-description {
+    max-width: 650px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.home-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 16px;
+    padding: 10px 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--white);
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.home-link:hover {
+    background: var(--primary);
+    color: var(--white);
+    transform: translateY(-1px);
+}
+
+/* Logo PSGA: bingkai tetap bulat */
+
+.intro-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 112px;
+
+    width: 112px;
+    height: 112px;
+    overflow: hidden;
+    padding: 0;
+
+    background: #F8D2E8;
+    border: 3px solid #F3C1DF;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgb(248 210 232 / 25%);
+}
+
+.intro-mark img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 50%;
+}
+
+/* ================= TOOLBAR SEARCH & SORT ================= */
+
+.gender-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 270px) auto;
+    align-items: end;
+    gap: 16px;
+
+    margin-bottom: 8px;
+    padding: 20px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+}
+
+.gender-search,
+.gender-sort {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.gender-search label,
+.gender-sort label {
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 13px;
+    color: var(--primary);
+    font-size: 23px;
+    pointer-events: none;
+}
+
+.gender-search input,
+.gender-sort select {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 13px;
+
+    color: var(--text);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    outline: none;
+
+    font-size: 13px;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.gender-search input {
+    padding-left: 40px;
+    padding-right: 38px;
+}
+
+.gender-search input::placeholder {
+    color: #A497A3;
+}
+
+.gender-search input:focus,
+.gender-sort select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgb(148 22 117 / 10%);
+}
+
+.clear-search {
+    position: absolute;
+    right: 7px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    font-size: 23px;
+}
+
+.clear-search:hover {
+    color: var(--primary);
+    background: var(--pink-soft);
+}
+
+.clear-search[hidden] {
+    display: none;
+}
+
+.reset-filter {
+    min-height: 44px;
+    padding: 10px 16px;
+
+    color: var(--primary);
+    background: var(--pink-soft);
+    border: 1px solid #F0D0E4;
+    border-radius: var(--radius-sm);
+
+    font-size: 12px;
+    font-weight: 750;
+    white-space: nowrap;
+    transition: all .2s ease;
+}
+
+.reset-filter:hover {
+    color: var(--white);
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.filter-status {
+    min-height: 18px;
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.gender-card[hidden],
+.gender-summary-row[hidden] {
+    display: none !important;
+}
+
+/* ================= SECTION ================= */
+
+.level-section {
+    margin-bottom: 30px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    margin-bottom: 16px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    color: var(--primary);
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+.section-heading p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.section-step {
+    display: inline-block;
+    margin-bottom: 5px;
+    color: var(--primary-light);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.result-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    padding: 6px 12px;
+
+    color: var(--primary);
+    background: var(--pink-soft);
+    border: 1px solid #F0D0E4;
+    border-radius: 999px;
+
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.text-link {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ================= BREADCRUMB ================= */
+
+.breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 9px;
+
+    margin: 0 0 26px;
+    padding: 13px 17px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.breadcrumb a {
+    font-weight: 700;
+}
+
+.breadcrumb > span {
+    color: #BBA9B8;
+}
+
+.breadcrumb strong {
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+/* ================= GRID KARTU ================= */
+
+.root-card-wrap {
+    width: 100%;
+    max-width: 100%;
+}
+
+.gender-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 22px;
+    width: 100%;
+}
+
+/* ================= KARTU ================= */
+
+.gender-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    padding: 22px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+
+    transition: box-shadow .25s ease, border-color .25s ease,
+                transform .25s ease;
+}
+
+.gender-card:hover {
+    border-color: #DDB4D2;
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+}
+
+.card-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.article-category {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 5px 10px;
+
+    color: var(--primary);
+    background: var(--pink-soft);
+    border: 1px solid #F0D0E4;
+    border-radius: 999px;
+
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .8px;
+}
+
+.gender-card h3 {
+    margin: 0 0 7px;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.card-description {
+    min-height: 20px;
+    margin: 0 0 16px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* ================= TOTAL ================= */
+
+.chart-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin: 0 0 12px;
+    padding: 13px 15px;
+
+    background: var(--pink-soft);
+    border: 1px solid #F2DCE9;
+    border-radius: var(--radius-md);
+}
+
+.chart-total span {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.chart-total strong {
+    color: var(--primary);
+    font-size: 24px;
+    font-weight: 850;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+/* ================= GRAFIK ================= */
+
+.chart-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    height: 230px;
+    margin: 0 auto 16px;
+}
+
+.chart-wrap canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* ================= LEGENDA GENDER ================= */
+
+.gender-legend {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.legend-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    min-width: 0;
+
+    padding: 12px;
+    background: #FCFAFC;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.legend-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    flex: 0 0 9px;
+    border-radius: 50%;
+}
+
+.male-dot {
+    background: var(--male);
+}
+
+.female-dot {
+    background: var(--female);
+}
+
+.legend-item > strong {
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.legend-percent {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* ================= FOOTER KARTU ================= */
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.card-footer a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 8px 12px;
+
+    color: var(--white);
+    background: var(--primary);
+    border-radius: 8px;
+
+    font-size: 11px;
+    font-weight: 750;
+    transition: background .2s ease;
+}
+
+.card-footer a:hover {
+    color: var(--white);
+    background: var(--primary-dark);
+}
+
+/* ================= TABEL ================= */
+
+.data-table-wrapper {
+    margin-top: 34px;
+    margin-bottom: 30px;
+}
+
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+}
+
+.table-scroll table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 12px;
+}
+
+.table-scroll thead {
+    color: var(--white);
+    background: var(--primary);
+}
+
+.table-scroll th {
+    padding: 14px 16px;
+    font-weight: 750;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.table-scroll td {
+    padding: 13px 16px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.table-scroll tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.table-scroll tbody tr:nth-child(even) {
+    background: #FDF9FC;
+}
+
+.table-scroll tbody tr:hover {
+    background: var(--pink-soft);
+}
+
+.table-scroll td strong {
+    font-weight: 750;
+}
+
+.empty-cell {
+    padding: 25px !important;
+    color: var(--muted) !important;
+    text-align: center;
+}
+
+/* ================= EMPTY STATE ================= */
+
+.empty-state {
+    padding: 36px 22px;
+    margin-bottom: 26px;
+
+    color: var(--muted);
+    background: var(--white);
+    border: 1px dashed #DCC6D7;
+    border-radius: var(--radius-lg);
+
+    text-align: center;
+}
+
+.empty-state h3 {
+    margin: 0 0 7px;
+    color: var(--primary);
+    font-size: 17px;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 14px;
+
+    color: var(--primary);
+    background: var(--pink-soft);
+    border-radius: 50%;
+    font-size: 24px;
+}
+
+.compact-empty {
+    padding: 28px 20px;
+}
+
+/* ================= FOOTER HALAMAN ================= */
+
+.page-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    margin-top: 34px;
+    padding: 20px 5px;
+
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+}
+
+/* ================= TABLET ================= */
+
+@media (max-width: 900px) {
+    .page-container {
+        padding: 24px 18px;
+    }
+
+    .page-intro {
+        gap: 20px;
+        padding: 22px;
+    }
+
+    .gender-grid {
+        gap: 16px;
+    }
+
+    .gender-card {
+        padding: 18px;
+    }
+
+    .gender-toolbar {
+        grid-template-columns: minmax(0, 1fr) minmax(190px, 230px);
+    }
+
+    .reset-filter {
+        grid-column: 1 / -1;
+        justify-self: end;
+    }
+}
+
+/* ================= HP ================= */
+
+@media (max-width: 700px) {
+    .page-container {
+        padding: 18px 14px 22px;
+    }
+
+    .page-intro {
+        gap: 15px;
+        margin-bottom: 22px;
+        padding: 18px;
+        border-radius: var(--radius-md);
+    }
+
+    .eyebrow {
+        font-size: 9px;
+        letter-spacing: 1px;
+    }
+
+    .page-intro h1 {
+        font-size: 24px;
+    }
+
+    .intro-description {
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    /* Logo tetap tampil dan berbentuk lingkaran */
+
+    .intro-mark {
+        width: 88px;
+        height: 88px;
+        flex-basis: 88px;
+        border-radius: 50%;
+    }
+
+    .intro-mark img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+
+    .gender-toolbar {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .gender-search {
+        grid-column: 1 / -1;
+    }
+
+    .gender-sort {
+        grid-column: 1 / -1;
+    }
+
+    .reset-filter {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .gender-search input,
+    .gender-sort select,
+    .reset-filter {
+        min-height: 43px;
+        font-size: 12px;
+    }
+
+    .filter-status {
+        margin-bottom: 17px;
+    }
+
+    .section-heading {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .section-heading h2 {
+        font-size: 18px;
+    }
+
+    .section-heading p {
+        font-size: 11px;
+    }
+
+    .result-count {
+        padding: 5px 9px;
+        font-size: 10px;
+    }
+
+    .gender-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .gender-card {
+        padding: 17px;
+        border-radius: var(--radius-md);
+    }
+
+    .gender-card h3 {
+        font-size: 17px;
+    }
+
+    .chart-wrap {
+        height: 225px;
+        max-width: 280px;
+    }
+
+    .breadcrumb {
+        gap: 7px;
+        padding: 11px 13px;
+        font-size: 11px;
+    }
+
+    .table-scroll table {
+        min-width: 570px;
+    }
+
+    .page-footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+        margin-top: 25px;
+    }
+}
+
+/* ================= HP KECIL ================= */
+
+@media (max-width: 420px) {
+    .page-container {
+        padding: 13px 10px 18px;
+    }
+
+    .page-intro {
+        gap: 10px;
+        padding: 14px;
+    }
+
+    .page-intro h1 {
+        font-size: 20px;
+    }
+
+    .intro-description {
+        font-size: 11px;
+    }
+
+    /* Logo tetap bulat, tidak disembunyikan */
+
+    .intro-mark {
+        width: 76px;
+        height: 76px;
+        flex-basis: 76px;
+        border-radius: 50%;
+    }
+
+    .intro-mark img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+
+    .gender-toolbar {
+        padding: 12px;
+    }
+
+    .gender-card {
+        padding: 14px;
+    }
+
+    .chart-total {
+        padding: 11px 12px;
+    }
+
+    .chart-total strong {
+        font-size: 21px;
+    }
+
+    .chart-wrap {
+        height: 205px;
+    }
+
+    .gender-legend {
+        gap: 8px;
+    }
+
+    .legend-item {
+        padding: 10px;
+    }
+
+    .legend-item > strong {
+        font-size: 17px;
+    }
+
+    .section-heading h2 {
+        font-size: 16px;
+    }
+}
+
+/* ================= AKSESIBILITAS ================= */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+    outline: 3px solid #E9A8D3;
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
