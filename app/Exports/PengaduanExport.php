@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Pengaduan;
+use Illuminate\Support\Enumerable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -16,7 +17,7 @@ class PengaduanExport implements FromCollection, WithHeadings, WithMapping
         protected $tanggalAkhir = null
     ) {}
 
-    public function collection()
+    public function collection(): Enumerable
     {
         $query = Pengaduan::query();
 
@@ -87,7 +88,7 @@ public function headings(): array
     ];
 }
 
-    public function map($pengaduan): array
+    public function map(mixed $pengaduan): array
     {
         return [
             $pengaduan->id,

@@ -199,8 +199,12 @@
                 ▣ Kelola Berita
             </a>
 
-            <a href="{{ route('admin.karya-ilmiah.index') }}">Kelola Karya Ilmiah</a>
-            <a href="{{ route('admin.gender.index') }}">Kelola Data Gender</a>
+            <a href="{{ route('admin.karya-ilmiah.index') }}">
+                ▧ Kelola Karya Ilmiah
+            </a>
+            <a href="{{ route('admin.gender.index') }}">
+                ▨ Kelola Data Gender
+            </a>
 
             <div class="menu-label">Website</div>
 

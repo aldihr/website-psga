@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
         Route::get('karya-ilmiah/export/pdf', [AdminKaryaIlmiahController::class, 'exportPdf'])
             ->name('karya-ilmiah.export.pdf');
         Route::resource('karya-ilmiah', AdminKaryaIlmiahController::class)->except(['show']);
+        Route::patch('gender/{gender}/publish', [AdminGenderController::class, 'publish'])
+            ->name('gender.publish');
         Route::resource('gender', AdminGenderController::class)->except(['show']);
     });
 

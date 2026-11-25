@@ -83,7 +83,9 @@ class KaryaIlmiahExporter
         $pageContents = [];
         $watermark = $this->pdfLogoWatermark();
         $exportedAtJakarta = new \DateTimeImmutable('now', new \DateTimeZone('Asia/Jakarta'));
-        $exportTimestamp = 'Waktu ekspor: ' . $exportedAtJakarta->format('d/m/Y H:i') . ' WIB';
+        $exportedAtUtc = $exportedAtJakarta->setTimezone(new \DateTimeZone('UTC'));
+        $exportTimestamp = 'Waktu ekspor: ' . $exportedAtJakarta->format('d/m/Y H:i')
+            . ' WIB / ' . $exportedAtUtc->format('d/m/Y H:i') . ' UTC';
 
         foreach ($chunks as $pageIndex => $pageRows) {
             $headerY = 481;

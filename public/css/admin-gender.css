@@ -77,10 +77,12 @@ a { transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
 .legend-value { color: #382638; font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .legend-percent { color: #796b78; font-size: 11px; }
 .card-actions, .table-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
-.delete-form { display: inline-flex; margin: 0; }
+.delete-form, .publish-form { display: inline-flex; margin: 0; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 36px; padding: 9px 12px; border: 1px solid transparent; border-radius: 9px; text-decoration: none; font-family: inherit; font-size: 12px; font-weight: 700; line-height: 1.2; cursor: pointer; }
 .btn:hover { transform: translateY(-1px); }
 .btn-edit { color: #941675; background: #fceaf4; }
+.btn-publish { color: #fff; background: linear-gradient(135deg, #b52b91, #74105b); box-shadow: 0 5px 14px rgba(148,22,117,.22); }
+.btn-publish:hover { background: linear-gradient(135deg, #a32183, #5f0d4b); box-shadow: 0 7px 17px rgba(148,22,117,.3); }
 .btn-detail { color: #176a48; background: #e8f8ef; }
 .btn-add { color: #fff; background: linear-gradient(135deg, #941675, #74105b); box-shadow: 0 5px 13px rgba(148,22,117,.18); }
 .btn-add:hover { background: linear-gradient(135deg, #74105b, #74105b); }

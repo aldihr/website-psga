@@ -50,6 +50,13 @@
 
     <div class="card-actions">
         <a href="{{ route('admin.gender.edit', $item->id) }}" class="btn btn-edit">Edit data</a>
+        @unless($item->is_published)
+            <form action="{{ route('admin.gender.publish', $item->id) }}" method="POST" class="publish-form">
+                @csrf
+                @method('PATCH')
+                <button type="submit" class="btn btn-publish"><span aria-hidden="true">✦</span> Publikasikan</button>
+            </form>
+        @endunless
         @if(!$isRoot)
             @if($hasChildren)
                 <a href="{{ route('admin.gender.index', ['node_id' => $item->id, 'sort' => $sort]) }}" class="btn btn-detail">Lihat data di bawah <span aria-hidden="true">→</span></a>

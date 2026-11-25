@@ -127,7 +127,7 @@
             </div>
             <div class="table-scroll">
                 <table>
-                    <thead><tr><th>Nama data</th><th>Bagian dari</th><th>Laki-laki</th><th>Perempuan</th><th>Total</th><th>Aksi</th></tr></thead>
+                    <thead><tr><th>Nama data</th><th>Bagian dari</th><th>Status</th><th>Laki-laki</th><th>Perempuan</th><th>Total</th><th>Aksi</th></tr></thead>
                     <tbody>
                     @foreach($summaryRows as $item)
                         @php
@@ -136,11 +136,19 @@
                         <tr>
                             <td><strong>{{ $item->name }}</strong></td>
                             <td>{{ optional($item->parent)->name ?? 'Data utama Universitas' }}</td>
+                            <td><span class="table-status {{ $item->is_published ? 'is-published' : 'is-draft' }}">{{ $item->is_published ? 'Public' : 'Draft' }}</span></td>
                             <td>{{ number_format($item->male_count, 0, ',', '.') }}</td>
                             <td>{{ number_format($item->female_count, 0, ',', '.') }}</td>
                             <td><strong>{{ number_format($total, 0, ',', '.') }}</strong></td>
                             <td><div class="table-actions">
                                 <a href="{{ route('admin.gender.edit', $item->id) }}" class="btn btn-edit">Edit</a>
+                                @unless($item->is_published)
+                                    <form action="{{ route('admin.gender.publish', $item->id) }}" method="POST" class="publish-form">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-publish"><span aria-hidden="true">✦</span> Publikasikan</button>
+                                    </form>
+                                @endunless
                                 @if($item->children->isNotEmpty())
                                 <a href="{{ route('admin.gender.index', ['node_id' => $item->id, 'sort' => $sort]) }}" class="btn btn-detail">Lihat data di bawah</a>
                                 @endif

@@ -14,13 +14,17 @@ return new class extends Migration
         Schema::create('pengaduans', function (Blueprint $table) {
             $table->id();
 
-    $table->string('nama_pelapor');
-    $table->string('email_pelapor');
-    $table->string('no_hp');
-    $table->string('judul_pengaduan');
-    $table->text('isi_pengaduan');
-    $table->string('status')->default('Menunggu');
-    $table->text('tanggapan')->nullable();
+            $table->string('no_ticket', 20)->nullable()->unique();
+            $table->string('nama_pelapor');
+            $table->string('terlapor')->nullable();
+            $table->string('email_pelapor');
+            $table->string('no_hp');
+            $table->string('fakultas')->nullable();
+            $table->string('kategori_pengaduan')->nullable();
+            $table->string('judul_pengaduan');
+            $table->text('isi_pengaduan');
+            $table->string('status')->default('Menunggu');
+            $table->text('tanggapan')->nullable();
 
             $table->timestamps();
         });

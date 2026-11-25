@@ -217,6 +217,31 @@ class GenderController extends Controller
         return redirect()->route('admin.gender.index')->with('success', 'Data gender berhasil diperbarui.');
     }
 
+    public function publish(GenderData $gender)
+    {
+        DB::transaction(function () use ($gender) {
+            $current = $gender;
+            $seen = [];
+
+            while ($current && !isset($seen[$current->id])) {
+                $seen[$current->id] = true;
+                if (!$current->is_published) {
+                    $current->is_published = true;
+                    $current->save();
+                }
+
+                $current = $current->parent_id
+                    ? GenderData::find($current->parent_id)
+                    : null;
+            }
+        });
+
+        return redirect()->route('admin.gender.index')->with(
+            'success',
+            'Data gender dan jalur induknya berhasil dipublikasikan.'
+        );
+    }
+
     private function rejectStandaloneUniversityName(string $name): void
     {
         if (strtolower(trim($name)) === 'universitas') {
