@@ -199,6 +199,13 @@
                 ▣ Kelola Berita
             </a>
 
+            <a href="{{ route('admin.karya-ilmiah.index') }}">
+                ▧ Kelola Karya Ilmiah
+            </a>
+            <a href="{{ route('admin.gender.index') }}">
+                ▨ Kelola Data Gender
+            </a>
+
             <div class="menu-label">Website</div>
 
                 <a href="{{ url('/') }}" target="_blank">
@@ -265,6 +272,18 @@
                    style="margin-top: 10px;">
                     + Tambah Berita
                 </a>
+            </div>
+
+            <div class="card">
+                <h2>Kelola Karya Ilmiah</h2>
+                <p>Kelola publikasi ilmiah yang ditampilkan pada halaman informasi PSGA.</p>
+                <a class="button" href="{{ route('admin.karya-ilmiah.index') }}">Buka Karya Ilmiah</a>
+            </div>
+
+            <div class="card">
+                <h2>Kelola Data Gender</h2>
+                <p>Kelola data gender dan struktur kategori yang ditampilkan kepada publik.</p>
+                <a class="button" href="{{ route('admin.gender.index') }}">Buka Data Gender</a>
             </div>
         </section>
     </main>

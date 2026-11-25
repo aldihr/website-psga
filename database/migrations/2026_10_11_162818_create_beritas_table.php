@@ -16,11 +16,11 @@ return new class extends Migration
         $table->id();
         $table->string('judul');
         $table->string('slug')->unique();
-        $table->string('ringkasan', 500)->nullable();
+        $table->longText('ringkasan')->nullable();
         $table->longText('isi');
         $table->string('gambar')->nullable();
         $table->string('kategori')->nullable();
-        $table->enum('status', ['draft', 'terbit'])
+        $table->enum('status', ['draft', 'terbit', 'arsip'])
               ->default('draft');
         $table->timestamp('tanggal_terbit')->nullable();
         $table->timestamps();

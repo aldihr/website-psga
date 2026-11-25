@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PengaduanController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\KaryaIlmiahController;
+use App\Http\Controllers\GenderController;
+use App\Http\Controllers\Admin\KaryaIlmiahController as AdminKaryaIlmiahController;
+use App\Http\Controllers\Admin\GenderController as AdminGenderController;
 
 // Login Admin
 Route::get('/login', [AuthController::class, 'showLogin'])
@@ -25,18 +29,50 @@ Route::get('/visi-misi', function () {
     return view('visi-misi');
 });
 
-Route::prefix('admin/berita')
-    ->name('berita.')
-    ->controller(BeritaController::class)
-    ->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::patch('/{id}/arsipkan', 'arsipkan')->name('arsipkan');
-        Route::delete('/{id}', 'hapus')->name('hapus');
-        Route::get('/arsip', [BeritaController::class, 'arsip'])->name('arsip');
-        Route::patch('/{id}/pulihkan', [BeritaController::class, 'pulihkan'])->name('pulihkan');
+// Informasi publik
+Route::get('/karya-ilmiah', [KaryaIlmiahController::class, 'index'])
+    ->name('karya-ilmiah.index');
+Route::get('/gender', [GenderController::class, 'index'])
+    ->name('gender.index');
+
+Route::middleware('auth')->group(function () {
+    Route::prefix('admin/berita')
+        ->name('berita.')
+        ->controller(BeritaController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::patch('/{id}/arsipkan', 'arsipkan')->name('arsipkan');
+            Route::delete('/{id}', 'hapus')->name('hapus');
+            Route::get('/arsip', [BeritaController::class, 'arsip'])->name('arsip');
+            Route::patch('/{id}/pulihkan', [BeritaController::class, 'pulihkan'])->name('pulihkan');
+        });
+
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('karya-ilmiah/export/excel', [AdminKaryaIlmiahController::class, 'exportExcel'])
+            ->name('karya-ilmiah.export.excel');
+        Route::get('karya-ilmiah/export/pdf', [AdminKaryaIlmiahController::class, 'exportPdf'])
+            ->name('karya-ilmiah.export.pdf');
+        Route::resource('karya-ilmiah', AdminKaryaIlmiahController::class)->except(['show']);
+        Route::patch('gender/{gender}/publish', [AdminGenderController::class, 'publish'])
+            ->name('gender.publish');
+        Route::resource('gender', AdminGenderController::class)->except(['show']);
     });
+
+    Route::view('/admin/dashboard', 'admin.dashboard')->name('admin.dashboard');
+
+    Route::get('/pengaduan/admin', [PengaduanController::class, 'admin'])
+        ->name('pengaduan.admin');
+    Route::get('/pengaduan/{id}/edit', [PengaduanController::class, 'edit'])
+        ->name('pengaduan.edit');
+    Route::put('/pengaduan/{id}', [PengaduanController::class, 'update'])
+        ->name('pengaduan.update');
+    Route::get('/pengaduan/admin/export/excel', [PengaduanController::class, 'exportExcel'])
+        ->name('pengaduan.export.excel');
+    Route::get('/pengaduan/admin/export/pdf', [PengaduanController::class, 'exportPdf'])
+        ->name('pengaduan.export.pdf');
+});
 
 // Halaman detail berita untuk pengunjung
 Route::get('/berita/{slug}', [BeritaController::class, 'show'])
@@ -52,31 +88,9 @@ Route::get('/pengaduan/create', [PengaduanController::class, 'create'])
 Route::post('/pengaduan', [PengaduanController::class, 'store'])
     ->name('pengaduan.store');
 
-Route::get('/pengaduan/admin', [PengaduanController::class, 'admin'])
-    ->name('pengaduan.admin');
-
-Route::get('/pengaduan/{id}/edit', [PengaduanController::class, 'edit'])
-    ->name('pengaduan.edit');
-
-Route::put('/pengaduan/{id}', [PengaduanController::class, 'update'])
-    ->name('pengaduan.update');
-
 Route::get('/tracking', [PengaduanController::class, 'tracking'])
     ->name('pengaduan.tracking');
 
 Route::view('/kontak', 'kontak')->name('kontak');
 
 
-Route::view('/admin/dashboard', 'admin.dashboard')
-    ->middleware('auth')
-    ->name('admin.dashboard');
-
-Route::get('/pengaduan/admin/export/excel', [
-    PengaduanController::class,
-    'exportExcel'
-])->name('pengaduan.export.excel');
-
-Route::get('/pengaduan/admin/export/pdf', [
-    PengaduanController::class,
-    'exportPdf'
-])->name('pengaduan.export.pdf');
